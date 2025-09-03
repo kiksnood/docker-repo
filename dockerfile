@@ -1,7 +1,11 @@
 FROM python:3.9-slim
-
-COPY helloWorld.py /app/helloWorld.py
-
 WORKDIR /app
 
-CMD ["python", "helloWorld.py"]
+RUN apt-get update && apt-get install -y git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clone repo once during build
+RUN git clone https://github.com/kiksnood/docker-repo.git .
+
+# Run git pull first, then start your script
+CMD git pull && python helloWorld.py
